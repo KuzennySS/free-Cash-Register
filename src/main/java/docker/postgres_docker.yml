@@ -1,0 +1,11 @@
+version: '2.1'
+
+services:
+  postgres:
+    image: postgres:12
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_USER: admin
+      POSTGRES_DB: db
