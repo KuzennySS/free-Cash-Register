@@ -13,14 +13,19 @@ repositories {
 }
 
 dependencies {
+	// Для работы с БД ORM:
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	// Для создания REST контроллера:
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	// драйвер postgresql
 	implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.9'
+	// swagger
 	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
 	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+	// lombok
 	compileOnly 'org.projectlombok:lombok:1.18.12'
 	annotationProcessor 'org.projectlombok:lombok:1.18.12'
-
+	// тестирование
 	testCompile 'junit:junit:4.12'
 	compile 'junit:junit:4.12'
 
