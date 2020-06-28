@@ -1,4 +1,4 @@
-package db;
+package entity;
 
 import lombok.*;
 
@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "alfa_battle")
+@Table(name = "branches")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
