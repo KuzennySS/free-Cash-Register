@@ -42,4 +42,17 @@ public class CashRestController {
     public List<AtmOffice> getAtmOffice() {
         return atmOfficeService.getAll();
     }
+
+    /**
+     * REST контроллер возвращает ближайший банкомат
+     */
+    @GetMapping("/branches/")
+    public ResponseEntity<?> getNearestOffice(@RequestParam(name = "lat") String lat, @RequestParam(name = "lon") String lon) {
+        String latitude = lat;
+        String longitude = lon;
+
+        return lat != null
+                ? new ResponseEntity<>("latitude: " + latitude + ", longitude: " + longitude, HttpStatus.OK)
+                : new ResponseEntity<>(new ErrorRequest("branch not found"), HttpStatus.NOT_FOUND);
+    }
 }
