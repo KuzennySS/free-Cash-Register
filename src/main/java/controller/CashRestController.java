@@ -2,6 +2,7 @@ package controller;
 
 import entity.AtmOffice;
 import entity.ErrorRequest;
+import entity.NearAtmOffice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import service.AtmOfficeService;
+import service.CalculateDistance;
 
 import java.util.List;
 
@@ -18,9 +20,12 @@ public class CashRestController {
 
     private AtmOfficeService atmOfficeService;
 
+    private CalculateDistance calculateDistance;
+
     @Autowired
-    public CashRestController(AtmOfficeService atmOfficeService) {
+    public CashRestController(AtmOfficeService atmOfficeService, CalculateDistance calculateDistance) {
         this.atmOfficeService = atmOfficeService;
+        this.calculateDistance = calculateDistance;
     }
 
     /**
@@ -47,12 +52,11 @@ public class CashRestController {
      * REST контроллер возвращает ближайший банкомат
      */
     @GetMapping("/branches/")
-    public ResponseEntity<?> getNearestOffice(@RequestParam(name = "lat") String lat, @RequestParam(name = "lon") String lon) {
-        String latitude = lat;
-        String longitude = lon;
+    public ResponseEntity<?> getNearestOffice(@RequestParam(name = "lat") Double lat, @RequestParam(name = "lon") Double lon) {
+        NearAtmOffice nearAtmOffice = calculateDistance.getNearestAtm(lat, lon);
 
-        return lat != null
-                ? new ResponseEntity<>("latitude: " + latitude + ", longitude: " + longitude, HttpStatus.OK)
-                : new ResponseEntity<>(new ErrorRequest("branch not found"), HttpStatus.NOT_FOUND);
+        return nearAtmOffice != null
+                ? new ResponseEntity<>(nearAtmOffice, HttpStatus.OK)
+                : new ResponseEntity<>(new ErrorRequest("wrong coordinates"), HttpStatus.NOT_FOUND);
     }
 }
