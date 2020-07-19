@@ -1,6 +1,7 @@
 package controller;
 
 import entity.AtmOffice;
+import entity.BranchesWithPredicting;
 import entity.ErrorRequest;
 import entity.NearAtmOffice;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class CashRestController {
      * REST контроллер возвращает банкомат по id
      */
     @GetMapping("/branches/{id}")
-    public ResponseEntity<?> getAtmOffice(@PathVariable(name = "id") int id) {
+    public ResponseEntity<?> getAtmOffice(@PathVariable int id) {
         final AtmOffice atmOffice = atmOfficeService.getById(id);
 
         return atmOffice != null
@@ -52,11 +53,25 @@ public class CashRestController {
      * REST контроллер возвращает ближайший банкомат
      */
     @GetMapping("/branches/")
-    public ResponseEntity<?> getNearestOffice(@RequestParam(name = "lat") Double lat, @RequestParam(name = "lon") Double lon) {
+    public ResponseEntity<?> getNearestOffice(@RequestParam Double lat, @RequestParam Double lon) {
         NearAtmOffice nearAtmOffice = calculateDistance.getNearestAtm(lat, lon);
 
         return nearAtmOffice != null
                 ? new ResponseEntity<>(nearAtmOffice, HttpStatus.OK)
+                : new ResponseEntity<>(new ErrorRequest("wrong coordinates"), HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * REST контроллер возвращает загруженость конкретного банкомата
+     */
+    @GetMapping("/branches/{id}/predict")
+    public ResponseEntity<?> getPredictWorkload(@PathVariable int id,
+                                                @RequestParam(name = "dayOfWeek") int dayOfWeek,
+                                                @RequestParam(name = "hourOfDay") int hourOfDay) {
+        BranchesWithPredicting branchesWithPredicting = BranchesWithPredicting.builder().build();
+
+        return branchesWithPredicting != null
+                ? new ResponseEntity<>(branchesWithPredicting, HttpStatus.OK)
                 : new ResponseEntity<>(new ErrorRequest("wrong coordinates"), HttpStatus.NOT_FOUND);
     }
 }
