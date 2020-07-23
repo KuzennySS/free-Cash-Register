@@ -1,6 +1,7 @@
 package service;
 
 import entity.QueueLog;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import repository.QueueLogRepository;
 
@@ -11,6 +12,7 @@ public class QueueLogService {
 
     private final QueueLogRepository repository;
 
+    @Autowired
     public QueueLogService(QueueLogRepository repository) {
         this.repository = repository;
     }

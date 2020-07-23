@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import service.AtmOfficeService;
 import service.CalculateDistance;
+import service.CalculateWorkLoad;
 
 import java.util.List;
 
@@ -23,10 +24,15 @@ public class CashRestController {
 
     private CalculateDistance calculateDistance;
 
+    private CalculateWorkLoad calculateWorkLoad;
+
     @Autowired
-    public CashRestController(AtmOfficeService atmOfficeService, CalculateDistance calculateDistance) {
+    public CashRestController(AtmOfficeService atmOfficeService,
+                              CalculateDistance calculateDistance,
+                              CalculateWorkLoad calculateWorkLoad) {
         this.atmOfficeService = atmOfficeService;
         this.calculateDistance = calculateDistance;
+        this.calculateWorkLoad = calculateWorkLoad;
     }
 
     /**
@@ -58,7 +64,7 @@ public class CashRestController {
 
         return nearAtmOffice != null
                 ? new ResponseEntity<>(nearAtmOffice, HttpStatus.OK)
-                : new ResponseEntity<>(new ErrorRequest("wrong coordinates"), HttpStatus.NOT_FOUND);
+                : new ResponseEntity<>(new ErrorRequest("branch not found"), HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -68,10 +74,11 @@ public class CashRestController {
     public ResponseEntity<?> getPredictWorkload(@PathVariable int id,
                                                 @RequestParam(name = "dayOfWeek") int dayOfWeek,
                                                 @RequestParam(name = "hourOfDay") int hourOfDay) {
-        BranchesWithPredicting branchesWithPredicting = BranchesWithPredicting.builder().build();
+
+        BranchesWithPredicting branchesWithPredicting = calculateWorkLoad.getPredict(id, dayOfWeek, hourOfDay);
 
         return branchesWithPredicting != null
                 ? new ResponseEntity<>(branchesWithPredicting, HttpStatus.OK)
-                : new ResponseEntity<>(new ErrorRequest("wrong coordinates"), HttpStatus.NOT_FOUND);
+                : new ResponseEntity<>(new ErrorRequest("branch not found"), HttpStatus.NOT_FOUND);
     }
 }

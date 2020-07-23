@@ -7,9 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+/**
+ * Сущность описывающая ожидание клиента в конкретном офисе
+ */
 @Entity
 @Table(name = "queue_log")
 @Data
@@ -27,7 +29,7 @@ public class QueueLog {
     private int branchesId;
 
     @Column
-    private LocalDate date;
+    private LocalDate data;
 
     @Column
     private LocalTime startTimeOfWait;
